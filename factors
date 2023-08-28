@@ -1,0 +1,38 @@
+#!/usr/bin/python3
+
+import sys
+from math import isqrt
+
+def find_factorization(number):
+    factors = []
+    integer_sqrt = isqrt(number)
+
+    for candidate in range(2, integer_sqrt + 1):
+        if number % candidate == 0:
+            factors.append((candidate, number // candidate))
+            break
+    else:
+        factors.append((1, number))
+    return factors
+
+def factorize_numbers():
+    if len(sys.argv) < 2:
+        print("Usage: factors <file>")
+        sys.exit(1)
+
+    input_filename = sys.argv[1]
+    with open(input_filename, "r") as file:
+        input_numbers = [int(line.strip()) for line in file]
+
+    for number in input_numbers:
+        factorization_result = find_factorization(number)
+        print("{:d}=".format(number), end="")
+        if factorization_result:
+            smaller_factor, larger_factor = factorization_result[0]
+            if smaller_factor > larger_factor:
+                smaller_factor, larger_factor = larger_factor, smaller_factor
+            print("{}*{}".format(larger_factor, smaller_factor))
+        else:
+            print("{}".format(number))
+
+factorize_numbers()
